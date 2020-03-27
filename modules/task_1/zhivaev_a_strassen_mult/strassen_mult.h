@@ -6,6 +6,8 @@
 void strassenMultSeq(unsigned int side, const double* a, const double* b,
                      double* result);
 
+double* addZeros(int size, double* a);
+
 void multSeq(unsigned int side, const double* a, const double* b,
              double* result);
 

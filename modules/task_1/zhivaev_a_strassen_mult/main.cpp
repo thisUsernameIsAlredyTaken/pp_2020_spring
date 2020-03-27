@@ -3,9 +3,9 @@
 #include <gtest/gtest.h>
 
 #include <array>
-#include <vector>
 #include <climits>
 #include <stdexcept>
+#include <vector>
 
 #include "./strassen_mult.h"
 
@@ -144,8 +144,10 @@ TEST(Helper_Functions, Split_matrix) {
   }
   a11Expected = {1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28};
   a12Expected = {5, 6, 7, 8, 13, 14, 15, 16, 21, 22, 23, 24, 29, 30, 31, 32};
-  a21Expected = {33, 34, 35, 36, 41, 42, 43, 44, 49, 50, 51, 52, 57, 58, 59, 60};
-  a22Expected = {37, 38, 39, 40, 45, 46, 47, 48, 53, 54, 55, 56, 61, 62, 63, 64};
+  a21Expected = {33, 34, 35, 36, 41, 42, 43, 44,
+                 49, 50, 51, 52, 57, 58, 59, 60};
+  a22Expected = {37, 38, 39, 40, 45, 46, 47, 48,
+                 53, 54, 55, 56, 61, 62, 63, 64};
 
   splitMatrix(kSize, a.data(), a11.data(), a12.data(), a21.data(), a22.data());
 
@@ -176,6 +178,17 @@ TEST(Helper_Functions, Assemble_matrix) {
                  a22.data());
 
   ASSERT_EQ(aExpected, a);
+}
+
+TEST(Helper_Functions, Adding_Zeros) {
+  std::vector<double> matrix{{1, 2, 3, 4, 5, 6, 7, 8, 9}};
+  std::vector<double> expected{
+      {1, 2, 3, 0, 4, 5, 6, 0, 7, 8, 9, 0, 0, 0, 0, 0}};
+  double* actual = addZeros(3, matrix.data());
+
+  std::vector<double> actualVector(actual, actual + 16);
+
+  ASSERT_EQ(expected, actualVector);
 }
 
 int main(int argc, char** argv) {

@@ -3,11 +3,47 @@
 #include "../../modules/task_1/zhivaev_a_strassen_mult/strassen_mult.h"
 
 #include <bitset>
+#include <climits>
 #include <cstdlib>
 #include <sstream>
-#include <climits>
 #include <stdexcept>
 #include <string>
+
+int nextPowerOf2(int number) {
+  if (number <= 1) {
+    return -1;
+  }
+  if (powerOf2(number) != -1) {
+    return number;
+  }
+  std::bitset<sizeof(int) * 8> bits(number);
+  for (int i = static_cast<int>(bits.size() - 3); i != 0; i--) {
+    if (bits.test(i)) {
+      bits.reset();
+      bits.set(i + 1);
+      return static_cast<int>(bits.to_ulong());
+    }
+  }
+  return -1;
+}
+
+double* addZeros(int size, double* a) {
+  if (powerOf2(size) > 0) {
+    return a;
+  }
+  int newSize = nextPowerOf2(size);
+  double* newMatrix = new double[newSize * newSize];
+  int i;
+  for (i = 0; i < newSize * newSize; i++) {
+    newMatrix[i] = 0;
+  }
+  for (i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      newMatrix[i * newSize + j] = a[i * size + j];
+    }
+  }
+  return newMatrix;
+}
 
 void strassenMultSeq(unsigned int side, const double* a, const double* b,
                      double* result) {
@@ -102,7 +138,8 @@ void strassenMultSeq(unsigned int side, const double* a, const double* b,
   delete[] c11;
 }
 
-void multSeq(unsigned int side, const double* a, const double* b, double* result) {
+void multSeq(unsigned int side, const double* a, const double* b,
+             double* result) {
   for (unsigned int i = 0; i < side; i++) {
     for (unsigned int j = 0; j < side; j++) {
       result[i * side + j] = 0.0;
@@ -141,7 +178,7 @@ void splitMatrix(unsigned int size, const double* a, double* a11, double* a12,
 }
 
 void assembleMatrix(unsigned int size, double* a, const double* a11,
-  const double* a12, const double* a21, const double* a22) {
+                    const double* a12, const double* a21, const double* a22) {
   unsigned int fSize = size / 2;
   for (unsigned int i = 0; i < fSize; i++) {
     for (unsigned int j = 0; j < fSize; j++) {
