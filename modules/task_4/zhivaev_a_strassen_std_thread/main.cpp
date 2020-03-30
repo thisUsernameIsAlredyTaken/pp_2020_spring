@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <thread>
 
 #include "./strassen_std_thread.h"
 
@@ -112,7 +113,7 @@ TEST(Parallel, Matrix_128x128) {
   }
 }
 
-TEST(Parallel, Matrix_256x256) {
+TEST(Parallel, DISABLED_Matrix_256x256) {
   const int kSize = 256;
   std::vector<double> a(kSize * kSize);
   std::vector<double> b(kSize * kSize);
@@ -180,7 +181,7 @@ TEST(Parallel, DISABLED_Matrix_1024x1024) {
   multSeq(kSize, a.data(), b.data(), expected.data());
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsedSeq = end - start;
-  std::cout << "Size: " << kSize << std::endl
+  std::cout << "Size: " << kSize << " Threads: " << std::thread::hardware_concurrency() << std::endl
             << "\tSequential: " << elapsedSeq.count() << std::endl;
 
   start = std::chrono::high_resolution_clock::now();
